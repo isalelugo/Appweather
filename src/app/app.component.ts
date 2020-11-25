@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { Subscriber } from 'rxjs';
 import { WeatherService} from './Services/weather.service'
 @Component({
@@ -9,7 +10,10 @@ import { WeatherService} from './Services/weather.service'
 export class AppComponent implements OnInit  {
   title = 'weatherapp';
   weather;
-  constructor (private weatherService : WeatherService){
+  constructor (
+    private weatherService : WeatherService,
+    private cookie: CookieService
+    ){
 
   }
   ngOnInit(){
@@ -20,6 +24,11 @@ export class AppComponent implements OnInit  {
     .subscribe(
       res =>{
         console.log(res);
+        this.cookie.set("ciudad",res["name"]);
+        this.cookie.set("vientos",res["wind"].deg);
+
+        alert("Los vientos de " + this.cookie.get("ciudad") + " son de " + this.cookie.get("vientos") + " km por hora");
+
         this.weather = res},
       err => console.log(err)
     )
@@ -39,6 +48,4 @@ export class AppComponent implements OnInit  {
     return false;
 
   }
-  
-
 }
